@@ -1,0 +1,93 @@
+.home-container {
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    .top-bar {
+        display: flex;
+        height: 100px;
+        width: 100%;
+        /* background-color: #A3C1AD; */
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0px 0px 4px 0px #000000;
+        .company-logo {
+            position: relative;
+            height: 80%;
+            border-radius: 50%;
+            margin-left: 10px;
+            box-shadow: 0px 2px 4px 0px #000000;
+        }
+        .top-drop-down {
+            display: flex;
+            align-items: center;
+            height: 40%;
+            /* background-color: #A3C1AD; */
+            width: 120px;
+            margin-right: 20px;
+            border-radius: 20px;
+            box-shadow: 0px 2px 4px 0px #000000;
+            .profile-image {
+                height: 100%;
+                border-radius: 100%;
+                margin-left: 0;
+                margin-right: 5px;
+            }
+            p {
+                font-weight: 500;
+            }
+        }
+    }
+    .colors-set {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin: 20px;
+    }
+    .each-color-set {
+        margin: 10px;
+        height: 20px;
+        width: 20px;
+    }
+    .home-modules {
+        position: relative;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        .each-module {
+            position: relative;
+            height: 170px;
+            width: 170px;
+            /* background-color: #A3C1AD; */
+            margin: 20px;
+            border-radius: 20%;
+            padding: 50px;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0px 2px 4px 0px #000000;
+        }
+    }
+    .cambridge-color {
+        background-color: #A3C1AD;
+    }
+    .azure-color { 
+        background-color: #007FFF;
+    }
+    .bayern-blue {
+        background-color: #0066b2
+    }
+    .brown {
+        background-color: #23297a
+    }
+    .carolina-blue {
+        background-color: #4B9CD3
+    }
+    .maroon {
+        background-color: #aa0023;
+    }
+    .colour-green {
+        background-color: #209183;
+    }
+}

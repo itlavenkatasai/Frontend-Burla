@@ -4,6 +4,7 @@ import './index.css';
 import Register from './components/Register';
 import Login from './components/Login';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
+import Home from './components/Home';
 
 const AppLayout = ()=>{
   return(
@@ -26,6 +27,10 @@ const appRouter = createBrowserRouter([
       {
         path : 'register',
         element : <Register />
+      },
+      {
+        path : 'home',
+        element : <Home />
       }
     ]
   }
