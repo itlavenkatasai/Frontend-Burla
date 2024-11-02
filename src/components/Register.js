@@ -1,8 +1,9 @@
 import { useState } from "react";
 import LogoBurla from "../images/LogoBurla.jpeg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BgBurla from "../images/BgBurla.jpg";
 import { checkAndValidateRegisterForm } from "../utils/Validate";
+import axios from "axios";
 const Register = () => {
     const [registerFields, setRegisterFields] = useState([
         {
@@ -55,7 +56,8 @@ const Register = () => {
             dependentKey : 'password'
         }
     ]);
-    const handleSubmit = () => {
+    const navigate = useNavigate();
+    const handleSubmit = async () => {
         let tempRegisterFields = [...registerFields];
         let errors = false;
         tempRegisterFields = tempRegisterFields.map((o,index)=>{
@@ -70,6 +72,18 @@ const Register = () => {
         console.log()
         if(errors){
             setRegisterFields(tempRegisterFields);
+        }
+        try {
+             // Transform registerFields array to an object format
+            const formData = registerFields.reduce((acc, field) => {
+                acc[field.fieldKey] = field.fieldValue;
+                return acc;
+            }, {});
+            const response = await axios.post('http://localhost:3000/register', formData);
+            console.log(response);
+            navigate('/login');
+        } catch (error) {
+            console.error('Registration failed:', error);
         }
     }
     return (
@@ -96,7 +110,7 @@ const Register = () => {
                                                 className="border py-3 px-6 bg-gray-100 shadow-2xl w-full rounded-md"
                                                 value={o.fieldValue}
                                                 onChange={(e) => {
-                                                    console.log(e.target.value);
+                                                    // console.log(e.target.value);
                                                     let tempFields = [...registerFields];
                                                     tempFields[index].fieldValue = e.target.value;
                                                     setRegisterFields(tempFields);
