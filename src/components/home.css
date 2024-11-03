@@ -4,6 +4,13 @@
     flex-direction: column;
     align-items: center;
     .top-bar {
+        .colors-set {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin: 20px;
+        }
+        position: relative;
         display: flex;
         height: 100px;
         width: 100%;
@@ -18,23 +25,67 @@
             margin-left: 10px;
             box-shadow: 0px 2px 4px 0px #000000;
         }
-        .top-drop-down {
+        .top-drop-down-column {
+            position: relative;
             display: flex;
-            align-items: center;
-            height: 40%;
-            /* background-color: #A3C1AD; */
+            flex-direction: column;
             width: 120px;
-            margin-right: 20px;
-            border-radius: 20px;
-            box-shadow: 0px 2px 4px 0px #000000;
-            .profile-image {
-                height: 100%;
-                border-radius: 100%;
-                margin-left: 0;
-                margin-right: 5px;
+            right: 10px;
+            /* height: 40%; */
+            .top-drop-down {
+                :hover {
+                    cursor: pointer;
+                }
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                height: 40px;
+                /* background-color: #A3C1AD; */
+                /* width: 120px; */
+                margin-right: 20px;
+                border-radius: 20px;
+                box-shadow: 0px 2px 4px 0px #000000;
+                .profile-image {
+                    height: 100%;
+                    border-radius: 100%;
+                    margin-left: 0;
+                    margin-right: 5px;
+                }
+                p {
+                    font-weight: 500;
+                }
             }
-            p {
-                font-weight: 500;
+            .drop-down {
+                /* display: block; */
+                /* margin-top: 60px; */
+                :hover {
+                    cursor: pointer;
+                }
+                box-shadow: 0px 2px 4px 0px #000000;
+                border-radius: 10%;
+                position: absolute;
+                width: 135px;
+                right: 10px;
+                margin-top: 2px;
+                .each-item {
+                    display: flex;
+                    flex-direction: row;
+                    height: 50px;
+                    align-items: center;
+                    border-bottom: 1px solid;
+                    border-radius: 10%;
+                    padding: 10px;
+                    /* width: 100px; */
+                    p {
+                        font-weight: 500;
+                    }
+                    .each-item-icon {
+                        width: 15px;
+                        height: 15px;
+                        margin-right: 10px;
+                    }
+
+                }
             }
         }
     }
@@ -60,6 +111,9 @@
             position: relative;
             height: 170px;
             width: 170px;
+            :hover {
+                cursor: pointer;
+            }
             /* background-color: #A3C1AD; */
             margin: 20px;
             border-radius: 20%;

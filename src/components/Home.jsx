@@ -5,6 +5,11 @@ import EmployeesIcon from '../images/employees-icon.png'
 import AttendanceIcon from '../images/attendance.png'
 import PaySlipIcon from '../images/payslip.png'
 import ReportsIcon from '../images/reports.png'
+import { Routes, Route, useNavigate} from 'react-router-dom';
+import Employees from "./Employees/Employees";
+import Attendance from "./Attendance/Attendance";
+import PaySlip from "./PaySlip/PaySlip";
+import Reports from "./Reports/Reports";
 
 const Home = (props) => {
     const modules = [
@@ -20,7 +25,7 @@ const Home = (props) => {
         },
         {
             moduleName: 'Pay-Slip',
-            moduleKey: 'paySlip',
+            moduleKey: 'payslip',
             moduleIcon: PaySlipIcon
         },
         {
@@ -39,25 +44,17 @@ const Home = (props) => {
         "colour-green"
     ]
     const [appColour, setAppColour] = useState('cambridge-color');
-    return (
-        <div className="home-container">
-            <TopBar appColour={appColour} />
-            <div className="colors-set">
-                {
-                    colors.map((o) => {
-                        return (
-                            <div key={o} className={`each-color-set ${o}`} onClick={() => setAppColour(o)}>
+    const navigate = useNavigate();
 
-                            </div>
-                        )
-                    })
-                }
-            </div>
+    const ModuleComponent = () => {
+        return (
             <div className="home-modules">
                 {
                     modules.map((o) => {
                         return (
-                            <div className={`each-module ${appColour}`} key={o.moduleKey}>
+                            <div className={`each-module ${appColour}`} key={o.moduleKey} onClick={() => {
+                                navigate(o.moduleKey)
+                            }}>
                                 <img src={o.moduleIcon} alt={o.moduleName} />
                                 <h2>{o.moduleName}</h2>
                             </div>
@@ -65,6 +62,34 @@ const Home = (props) => {
                     })
                 }
             </div>
+        )
+    }
+
+    return (
+        <div className="home-container">
+            <TopBar appColour={appColour} colors={colors} setAppColour={setAppColour}/>
+            <Routes>
+                <Route 
+                    path="/"
+                    element={ <ModuleComponent /> }
+                />
+                <Route 
+                    path="employees"
+                    element={ <Employees /> }
+                />
+                <Route 
+                    path="attendance"
+                    element={ <Attendance /> }
+                />
+                <Route 
+                    path="payslip"
+                    element={ <PaySlip /> }
+                />
+                <Route 
+                    path="reports"
+                    element={ <Reports /> }
+                />
+            </Routes>
         </div>
     )
 }
