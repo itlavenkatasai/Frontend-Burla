@@ -22,6 +22,7 @@ const TopBar = (props) => {
         }
     ]
 
+    //${props.appColour}
     return (
         <div className={`top-bar ${props.appColour}`}>
             <img src={CompanyLogo} alt="Logo" className="company-logo"/>

@@ -1,0 +1,50 @@
+.custom-toast .p-toast-message {
+    background-color: white; /* Danger (red) background */
+    color: red;            /* White font color for readability */
+    font-weight: bold;         /* Bold font */
+    border-radius: 4px;        /* Optional: rounded corners */
+    padding: 10px; 
+     /* Add a red border */
+    border-radius: 4px;             /* Optional: padding for better spacing */
+    border-left: 25px solid red;
+}
+
+/* Style the toast title and detail message */
+.custom-toast .p-toast-message .p-toast-summary {
+    font-weight: 500px;         /* Bold font for title */
+}
+.loader {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #3498db; /* Customize color */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+/* Custom border styling for PrimeReact DataTable */
+
+.p-datatable-custom-radius {
+    border-radius: 8px; /* Adjust the radius as needed */
+    overflow: hidden;   /* Ensures rounded corners apply to table contents */
+    border: 1px solid #ddd; /* Optional: Adds an outer border to the table */
+}
+.p-datatable-custom-radius .p-datatable-thead > tr > th,
+.p-datatable-custom-radius .p-datatable-tbody > tr > td {
+    border: 1px solid #000;
+    text-align: center;
+}
+
+.p-datatable-custom-radius .p-datatable-tbody > tr {
+    border-bottom: 1px solid #000;
+}
+.p-datatable-custom-radius .p-datatable-tbody > tr:hover {
+    background-color: wheat; /* Light grey background */
+    cursor: pointer;/* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
