@@ -1,23 +1,24 @@
 .home-container {
     display: flex;
-    height: 100vh;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    min-height: 100vh;
+    padding: 0px;
     .top-bar {
+        position: fixed;
+        display: flex;
+        height: 100px;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0px 0px 4px 0px #000000;
         .colors-set {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
             margin: 20px;
         }
-        position: relative;
-        display: flex;
-        height: 100px;
-        width: 100%;
-        /* background-color: #A3C1AD; */
-        align-items: center;
-        justify-content: space-between;
-        box-shadow: 0px 0px 4px 0px #000000;
         .company-logo {
             position: relative;
             height: 80%;
@@ -31,7 +32,6 @@
             flex-direction: column;
             width: 120px;
             right: 10px;
-            /* height: 40%; */
             .top-drop-down {
                 :hover {
                     cursor: pointer;
@@ -40,8 +40,7 @@
                 flex-direction: row;
                 align-items: center;
                 height: 40px;
-                /* background-color: #A3C1AD; */
-                /* width: 120px; */
+                width: 100%;
                 margin-right: 20px;
                 border-radius: 20px;
                 box-shadow: 0px 2px 4px 0px #000000;
@@ -56,8 +55,6 @@
                 }
             }
             .drop-down {
-                /* display: block; */
-                /* margin-top: 60px; */
                 :hover {
                     cursor: pointer;
                 }
@@ -65,7 +62,7 @@
                 border-radius: 10%;
                 position: absolute;
                 width: 135px;
-                right: 10px;
+                right: 1px;
                 margin-top: 2px;
                 .each-item {
                     display: flex;
@@ -74,8 +71,7 @@
                     align-items: center;
                     border-bottom: 1px solid;
                     border-radius: 10%;
-                    padding: 10px;
-                    /* width: 100px; */
+                    padding: s0px;
                     p {
                         font-weight: 500;
                     }
@@ -83,6 +79,7 @@
                         width: 15px;
                         height: 15px;
                         margin-right: 10px;
+                        margin-left: 10px;
                     }
 
                 }
@@ -96,7 +93,6 @@
         margin: 20px;
     }
     .each-color-set {
-        margin: 10px;
         height: 20px;
         width: 20px;
     }
@@ -114,10 +110,9 @@
             :hover {
                 cursor: pointer;
             }
-            /* background-color: #A3C1AD; */
             margin: 20px;
             border-radius: 20%;
-            padding: 50px;
+            padding: 45px;
             text-align: center;
             font-weight: 600;
             box-shadow: 0px 2px 4px 0px #000000;

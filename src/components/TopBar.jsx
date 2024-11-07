@@ -37,7 +37,7 @@ const TopBar = (props) => {
                 }
             </div>
             <div className={` top-drop-down-column`}>
-                <div className={` top-drop-down-column top-drop-down ${props.appColour}`} onClick={() => setShowDropDown(!showDropDown)}>
+                <div className={`top-drop-down ${props.appColour}`} onClick={() => setShowDropDown(!showDropDown)}>
                     <img src={ProfileImage} alt="Profile" className="profile-image"/>
                     <p> Profile </p>
                     <MdOutlineKeyboardArrowDown/>
