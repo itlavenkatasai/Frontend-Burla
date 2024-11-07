@@ -41,7 +41,8 @@ const Home = (props) => {
         "brown",
         "carolina-blue",
         "maroon",
-        "colour-green"
+        "colour-green",
+        "red"
     ]
     const [appColour, setAppColour] = useState('cambridge-color');
     const navigate = useNavigate();

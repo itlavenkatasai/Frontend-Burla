@@ -1,17 +1,22 @@
-import { useState } from 'react';
+import {
+    useRef, useState
+} from 'react';
 import LogoBurla from '../images/LogoBurla.jpeg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import BgBurla from '../images/BgBurla.jpg';
-import {checkAndValidateLoginForm} from '../utils/Validate';
+import { checkAndValidateLoginForm } from '../utils/Validate';
+import axios from 'axios';
+import { Toast } from 'primereact/toast';
+
 const Login = () => {
-    const [loginFields, setLoginFields] = useState([
+    const defaultLoginFields = [
         {
             fieldKey: 'phoneNumber',
             fieldLabel: 'PhoneNumber',
             fieldType: 'input',
             fieldValue: '',
             fieldInputType: 'number',
-            fieldError : ''
+            fieldError: ''
         },
         {
             fieldKey: 'password',
@@ -19,14 +24,18 @@ const Login = () => {
             fieldType: 'input',
             fieldValue: '',
             fieldInputType: 'password',
-            fieldError : ''
+            fieldError: ''
         }
-    ]);
-    
-    const handleSubmit = () => {
+    ];
+    const [loginFields, setLoginFields] = useState(defaultLoginFields);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const toast = useRef(null);
+    const handleSubmit = async () => {
+        setLoading(true);
         let tempLoginFields = [...loginFields];
         let errors = false;
-        tempLoginFields = tempLoginFields.map((o,index) => {
+        tempLoginFields = tempLoginFields.map((o, index) => {
             const errValue = checkAndValidateLoginForm(o.fieldKey, o.fieldValue);
             if (errValue) errors = true;
             return {
@@ -35,15 +44,51 @@ const Login = () => {
             }
         });
         if (errors) {
+            setLoading(false);
             return setLoginFields(tempLoginFields);
         }
+        try {
+            const formData = loginFields.reduce((acc, field) => {
+                acc[field.fieldKey] = field.fieldValue;
+                return acc;
+            }, {});
+            const response = await axios.post('http://localhost:3000/login', formData);
+            console.log(response.data);
+            const token = response.data.token;
+            localStorage.setItem("authToken", token);
+            setLoginFields(defaultLoginFields);
+            // navigate('/home');
+            setTimeout(() => {
+                setLoading(false); // Stop loading after delay
+                navigate('/home');
+            }, 2000);
+
+        } catch (error) {
+            const backendError = error.response.data.message;
+            console.log("backendError", backendError);
+
+            toast.current && toast.current.show({
+                severity: 'error',
+                detail: backendError,
+                life: 3000,
+                position: 'top-right',
+                className: 'custom-toast' // Applies the custom CSS
+            });
+            setLoading(false);
+        }
     }
-    
-    
+
+
     return (
         <>
+            {loading && (
+                <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+                    <div className="loader border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div>
+                </div>
+            )}
             <div className="flex h-screen bg-cover bg-center p-20 overflow-hidden"
                 style={{ backgroundImage: `url(${BgBurla})` }} >
+                <Toast ref={toast} className="custom-toast" />
                 <div className="flex w-full rounded-xl  overflow-hidden shadow-2xl bg-gradient-to-br from-rose-300 to-gray-400">
                     <div className="w-7/12  h-full flex items-center justify-center shadow-xl">
                         <img src={LogoBurla} alt="description" className="w-full h-full object-cover" />
@@ -68,7 +113,7 @@ const Login = () => {
                                                         }}
                                                         className="border border-gray-300 rounded-md py-3 px-2 bg-gray-100 shadow-lg w-2/3" // Tailwind classes for styling
                                                     />
-                                                    { o.fieldError ? <p className='text-red-500'>{ o.fieldError }</p> : <></>}
+                                                    {o.fieldError ? <p className='text-red-500'>{o.fieldError}</p> : <></>}
                                                 </div>
                                             ) : null
                                         }
@@ -79,7 +124,7 @@ const Login = () => {
                                 <button className='bg-blue-600 rounded-lg mt-5 px-6 py-3 text-white font-bold' onClick={handleSubmit}>Login</button>
                             </div>
                         </form>
-                        <p className='mt-5'>Don't have an account yet? Please  
+                        <p className='mt-5'>Don't have an account yet? Please
                             <Link to='/register' className='text-blue-600 underline font-semibold'>  Register</Link>
                         </p>
                     </div>

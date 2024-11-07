@@ -5,6 +5,9 @@ import Register from './components/Register';
 import Login from './components/Login';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 import Home from './components/Home';
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+import "./app.css";
+
 
 const AppLayout = ()=>{
   return(
