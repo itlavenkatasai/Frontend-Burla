@@ -1,6 +1,8 @@
 const phoneRegex = /^\d{10}$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// const dateRegex = ^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(19|20)\d{2}$;
+
 
 
 export const checkAndValidateLoginForm = (fieldKey, fieldValue) => {
@@ -33,5 +35,23 @@ export const checkAndValidateRegisterForm = (fieldKey, fieldValue, dependentValu
         if (dependentValue !== fieldValue) return 'Password and Confirm Password are not matching';
     }
 
+}
+
+export const checkAndValidateEmployeeForm = (fieldKey,fieldValue) => {
+    if(fieldKey === 'employeeName'){
+        if(fieldValue === '') return 'name could not be empty';
+    } else if(fieldKey === 'employeePhoneNumber'){
+        if(fieldValue === '') return 'phone number could not be empty';
+        if(fieldValue !== '' && !(phoneRegex.test(fieldValue))) return 'Invalid phone number'
+    } else if(fieldKey === 'employeeDOB'){
+        if(fieldValue === '') return 'date of birth could not be empty';
+        // if(fieldValue !== '' && !(dateRegex.test(fieldValue))) return 'Invalid date of birth';
+    }else if(fieldKey === 'employeeLocation'){
+        if(fieldValue === '') return 'location could not be empty';
+    }else if(fieldKey === 'employeeAadhar'){
+        if(fieldValue === '') return 'aadhar could not be empty';
+    }else if(fieldKey === 'employeeWagePerDay'){
+        if(fieldValue === '') return 'wage could not be empty' 
+    }
 }
 

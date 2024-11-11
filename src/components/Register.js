@@ -89,10 +89,8 @@ const Register = () => {
             console.log(response);
             setRegisterFields(defaultFields);
             // navigate('/login');
-            setTimeout(() => {
-                setLoading(false); // Stop loading after delay
-                navigate('/login');
-            }, 2000);
+            setLoading(false); // Stop loading after delay
+            navigate('/login');
         } catch (error) {
             const backendError = error.response.data.message;
             console.log("backendError", backendError);

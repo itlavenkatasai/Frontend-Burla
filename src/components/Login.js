@@ -58,10 +58,8 @@ const Login = () => {
             localStorage.setItem("authToken", token);
             setLoginFields(defaultLoginFields);
             // navigate('/home');
-            setTimeout(() => {
-                setLoading(false); // Stop loading after delay
-                navigate('/home');
-            }, 2000);
+            setLoading(false); // Stop loading after delay
+            navigate('/home');
 
         } catch (error) {
             const backendError = error.response.data.message;
