@@ -6,6 +6,7 @@ import { Dropdown } from 'primereact/dropdown'
 import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import { Toast } from 'primereact/toast';
+import { convertToRequiredDateFormat } from '../../utils/utils'
 
 
 const Attendance = () => {
@@ -19,7 +20,7 @@ const Attendance = () => {
         { name: "HalfDay", code: 3 }
     ]
     const handleStatusChange = (rowData, value) => {
-        const updateData = data.map((item) => item === rowData ? { ...item, employeeStatus: value.code, attendanceDate: date } : item);
+        const updateData = data.map((item) => item === rowData ? { ...item, employeeStatus: value.code, attendanceDate: convertToRequiredDateFormat(date) } : item);
         setData(updateData);
     }
     const getStatusColor = (status) => {
@@ -45,7 +46,7 @@ const Attendance = () => {
             </>
         )
     }
-    const getDataFromBackend = async () => {
+    const getEmployeesData = async () => {
         try {
             const response = await axios.get("http://localhost:3000/employees", {
                 headers: {
@@ -54,10 +55,11 @@ const Attendance = () => {
             });
             const updateResponse = response?.data?.data.map((o) => ({
                 employeeId: o.employeeId,
-                employeeName: o.employeeName
+                employeeName: o.employeeName,
+                employeeStatus: o.employeeStatus
             }))
+            console.log("updateResponse :: ", updateResponse, response.data?.data);
             setData(updateResponse || []);
-            // console.log(response);
         } catch (error) {
             const backendError = error.response.data.message;
             toast.current && toast.current.show({
@@ -75,9 +77,12 @@ const Attendance = () => {
             return setDateError("Date field is valid please enter date");
         }
         try {
-            const updateData = data.map((o) =>
-                !(o.employeeStatus) ? { ...o, employeeStatus: 2, attendanceDate: date } : o
+            const parsedDate = convertToRequiredDateFormat(date);
+            console.log("date :: ", parsedDate);
+            const updateData = data.map((o) => 
+                !(o.employeeStatus) ? { ...o, employeeStatus: 2, attendanceDate: parsedDate } : o
             )
+            console.log("updateData : ", updateData);
             await axios.post("http://localhost:3000/employees/attendance",
                 { attendanceData: updateData },
                 {
@@ -86,10 +91,10 @@ const Attendance = () => {
                         Authorization: `Bearer ${localStorage.getItem("authToken")}`
                     }
                 });
-            setDate("");
+            // setDate("");
             setDateError("");
         } catch (error) {
-            const backendError = error.response.data.message;
+            const backendError = error?.response?.data?.message;
             toast.current && toast.current.show({
                 severity: 'error',
                 detail: backendError,
@@ -99,46 +104,53 @@ const Attendance = () => {
             });
         }
     }
-    useEffect(() => {
-        const fetchAttendanceData = async () => {
-            console.log(date);
-            if (date) {
-                try {
-                    const response = await axios.post("http://localhost:3000/employees/attendanceGetByDate",
-                        {date},
-                         {
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${localStorage.getItem("authToken")}`
-                        }
-                    });
-                    console.log(response);
-                } catch (error) {
-                    const backendError = error.response?.data?.message || "An error occurred";
-                    toast.current && toast.current.show({
-                        severity: 'error',
-                        detail: backendError,
-                        life: 3000,
-                        position: 'top-right',
-                        className: 'custom-toast'
-                    });
+    const fetchAttendanceData = async () => {
+        console.log(date);
+        if (date) {
+            try {
+                const response = await axios.post("http://localhost:3000/employees/attendanceGetByDate",
+                    {date: convertToRequiredDateFormat(date)},
+                     {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("authToken")}`
+                    }
+                });
+                console.log("attendance resp:: ",response?.data?.data);
+                if ((response?.data?.data || []).length === 0) {
+                    getEmployeesData();
+                } else {
+                    const formattedData = (response?.data?.data || []).map((o) => ({
+                        employeeName: o.employeeName,
+                        employeeId: o.employeeId,
+                        employeeStatus: parseInt(o.employeeStatus)
+                    }))
+                    setData(formattedData);
                 }
+            } catch (error) {
+                const backendError = error.response?.data?.message || "An error occurred";
+                toast.current && toast.current.show({
+                    severity: 'error',
+                    detail: backendError,
+                    life: 3000,
+                    position: 'top-right',
+                    className: 'custom-toast'
+                });
             }
-        };
+        }
+    };
     
+    useEffect(() => {
         fetchAttendanceData(); // Call the async function within the effect
     }, [date]);
-    useEffect(() => {
-        getDataFromBackend();
-        // eslint-disable-next-line
-    }, []);
+    
     return (
         <div className="table-container mt-5 flex flex-col items-center space-y-4 max-w-lg mx-auto">
             <Toast ref={toast} className="custom-toast" />
             <div className="w-full">
                 <Calendar
                     id="buttondisplay"
-                    value={'17-11-2024'}
+                    value={date}
                     onChange={(e) => {
                         console.log("date :: ", e.value)
                         setDate(e.value)
@@ -153,11 +165,10 @@ const Attendance = () => {
             <div className="w-full">
                 <DataTable
                     value={data}
-
                     className="p-datatable w-full">
                     <Column field='employeeId' header="EmployeeId" />
                     <Column field="employeeName" header="Employee Name" />
-                    <Column body={actionTemplate} header="Employee Status" />
+                    <Column field="employeeStatus" body={actionTemplate} header="Employee Status" />
                 </DataTable>
             </div>
 
