@@ -91,7 +91,7 @@ const Attendance = () => {
             const parsedDate = convertToRequiredDateFormat(date);
             console.log("date :: ", parsedDate);
             const updateData = data.map((o) => 
-                !(o.employeeStatus) ? { ...o, employeeStatus: 2, attendanceDate: parsedDate } : o
+                !(o.employeeStatus) ? { ...o, employeeStatus: 2, attendanceDate: parsedDate } : {...o, attendanceDate: parsedDate}
             )
             console.log("updateData : ", updateData);
             await axios.post("http://localhost:3000/employees/attendance",
