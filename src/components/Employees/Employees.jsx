@@ -11,6 +11,7 @@ import { Dialog } from "primereact/dialog";
 import { EmployeeForm } from "./EmployeeForm";
 import { Toast } from "primereact/toast";
 import axios from "axios";
+import './employee.css'
 
 const Employees = () => {
     const navigate = useNavigate();
@@ -18,6 +19,7 @@ const Employees = () => {
     const [showEmployeeForm, setShowEmployeeForm] = useState(false);
     const toast = useRef(null);
     const defaultEmployeeFields = [
+       
         {
             filedKey: 'employeeName',
             fieldLabel: 'Name',
