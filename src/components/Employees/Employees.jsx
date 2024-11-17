@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import { Button } from 'primereact/button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faArrowLeft, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from "react-router";
@@ -18,8 +19,10 @@ const Employees = () => {
     const [data, setData] = useState([]);
     const [showEmployeeForm, setShowEmployeeForm] = useState(false);
     const toast = useRef(null);
+    const [deleteDialog, setDeleteDialog] = useState(false);
+    const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
     const defaultEmployeeFields = [
-       
+
         {
             filedKey: 'employeeName',
             fieldLabel: 'Name',
@@ -99,15 +102,16 @@ const Employees = () => {
             });
         }
     }
-    const handleDelete = async (id) => {
+    const handleDelete = async () => {
         try {
-            console.log(id);
-            await axios.delete(`http://localhost:3000/employee/${id}`, {
+
+            await axios.delete(`http://localhost:3000/employee/${selectedEmployeeId}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`
                 }
             })
             getDataFromBackend();
+            setSelectedEmployeeId("");
         } catch (error) {
             const backendError = error.response.data.message;
             toast.current && toast.current.show({
@@ -146,6 +150,10 @@ const Employees = () => {
             });
         }
     }
+    const handleDeleteButton = (id) => {
+        setDeleteDialog(true);
+        setSelectedEmployeeId(id);
+    }
     const actionsTemplate = (rowData) => {
         return (
             <div className="flex space-x-2 justify-center">
@@ -166,10 +174,10 @@ const Employees = () => {
                 </button>
                 <button className="bg-red-400 text-black font-bold px-3 py-2 rounded-md hover:bg-red-500 transition"
                     onClick={() => {
-                        if (window.confirm("Are you sure you want to delete this item?")) {
-                            handleDelete(rowData._id);
-                            console.log(rowData);
-                        }
+                        // if (window.confirm("Are you sure you want to delete this item?")) {
+                        //     handleDelete(rowData._id);
+                        // }
+                        handleDeleteButton(rowData._id);
                     }}
                 >
                     Delete
@@ -277,6 +285,33 @@ const Employees = () => {
                     isId={isId}
                     setIsId={setIsId}
                 />
+            </Dialog>
+            <Dialog
+                header="Are You Delete Employee"
+                visible={deleteDialog}
+                onHide={() => setDeleteDialog(false)}
+                closable={true}
+            >
+                <div className='shadow-2xl p-4 border border-red-600 rounded-lg'>
+
+                    <p>Are you sure you want to delete employee?</p>
+                    <div className="flex justify-end mt-4 space-x-2">
+                        <Button
+                            label="Cancel"
+                            className="p-button-text p-button-danger bg-yellow-200 px-2 py-2"
+                            onClick={() => setDeleteDialog(false)} // Close dialog without action
+
+                        />
+                        <Button
+                            label="Submit"
+                            className="p-button-primary bg-yellow-200 px-2 py-2"
+                            onClick={() => {
+                                handleDelete();
+                                setDeleteDialog(false);
+                            }} // Call the API
+                        />
+                    </div>
+                </div>
             </Dialog>
         </div>
     );

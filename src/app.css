@@ -1,4 +1,8 @@
-.custom-toast .p-toast-message {
+/* Style the toast title and detail message */
+.custom-toast .p-toast-message .p-toast-summary {
+    font-weight: 500px;         /* Bold font for title */
+}
+.custom-toast .p-toast-message-error {
     background-color: white; /* Danger (red) background */
     color: red;            /* White font color for readability */
     font-weight: bold;         /* Bold font */
@@ -8,10 +12,15 @@
     border-radius: 4px;             /* Optional: padding for better spacing */
     border-left: 25px solid red;
 }
-
-/* Style the toast title and detail message */
-.custom-toast .p-toast-message .p-toast-summary {
-    font-weight: 500px;         /* Bold font for title */
+.custom-toast .p-toast-message-success {
+    background-color: white; /* Danger (red) background */
+    color: black;            /* White font color for readability */
+    font-weight: bold;         /* Bold font */
+    border-radius: 4px;        /* Optional: rounded corners */
+    padding: 10px; 
+     /* Add a red border */
+    border-radius: 4px;             /* Optional: padding for better spacing */
+    border-left: 55px solid green;
 }
 .loader {
     border: 4px solid rgba(255, 255, 255, 0.3);
