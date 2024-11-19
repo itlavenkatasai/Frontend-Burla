@@ -19,7 +19,7 @@ const Attendance = () => {
     const [data, setData] = useState([])
     const [date, setDate] = useState(new Date());
     const [submit, setSubmit] = useState(false);
-    const [dateError, setDateError] = useState("");
+    // const [dateError, setDateError] = useState("");
     const navigate = useNavigate();
     const statuses = [
         { name: "Present", code: 1 },
@@ -79,21 +79,20 @@ const Attendance = () => {
         }
     }
     const handleAttendanceSubmit = async () => {
-        if (!date) {
-            return setDateError("Please select a valid date.");
-        }
         setSubmit(true); // Show the confirmation dialog
     };
 
     const confirmAttendanceSubmit = async () => {
         try {
-            setLoading(true);
+            
             const parsedDate = convertToRequiredDateFormat(date);
             console.log("date :: ", parsedDate);
             const updateData = data.map((o) => 
                 !(o.employeeStatus) ? { ...o, employeeStatus: 2, attendanceDate: parsedDate } : {...o, attendanceDate: parsedDate}
             )
             console.log("updateData : ", updateData);
+            setLoading(true);
+            console.log("loading started");
             await axios.post("http://localhost:3000/employees/attendance",
                 { attendanceData: updateData },
                 {
@@ -103,7 +102,8 @@ const Attendance = () => {
                     }
                 });
             // setDate("");
-            setDateError("");
+            
+            
             toast.current && toast.current.show({
                 severity: 'success',
                 detail: "Attendance successfully submitted!",
@@ -136,8 +136,9 @@ const Attendance = () => {
                     }
                 });
                 console.log("attendance resp:: ",response?.data?.data);
-                setLoading(false);
+                
                 if ((response?.data?.data || []).length === 0) {
+                    setLoading(true);
                     getEmployeesData();
                 } else {
                     const formattedData = (response?.data?.data || []).map((o) => ({
@@ -145,6 +146,7 @@ const Attendance = () => {
                         employeeId: o.employeeId,
                         employeeStatus: parseInt(o.employeeStatus)
                     }))
+                    
                     setData(formattedData);
                 }
             } catch (error) {
@@ -197,8 +199,6 @@ const Attendance = () => {
                         placeholder="Select Date"
                     />
                 </div>
-
-                {dateError && <p className="text-red-500 pt-1 font-bold text-center">{dateError}</p>}
 
                 {/* Row for Table */}
                 <div className="w-full">
