@@ -13,6 +13,7 @@ import { EmployeeForm } from "./EmployeeForm";
 import { Toast } from "primereact/toast";
 import axios from "axios";
 import './employee.css'
+import { convertToRequiredDateFormat } from "../../utils/utils";
 
 const Employees = () => {
     const navigate = useNavigate();
@@ -47,6 +48,15 @@ const Employees = () => {
             fieldPlaceHolder: 'Enter employee date of birth',
             fieldType: 'input',
             fieldValue: '',
+            fieldInputType: 'date',
+            fieldError: ''
+        },
+        {
+            filedKey: 'employeeJoiningDate',
+            fieldLabel: 'employee JoiningDate',
+            fieldPlaceHolder: 'Enter employe joining date',
+            fieldType: 'input',
+            fieldValue: new Date().toISOString().split("T")[0],
             fieldInputType: 'date',
             fieldError: ''
         },
@@ -162,7 +172,7 @@ const Employees = () => {
                     let tempFields = [...defaultEmployeeFields];
                     tempFields = tempFields.map((o) => ({
                         ...o,
-                        fieldValue: rowData[o.filedKey]
+                        fieldValue: ['employeeJoiningDate', 'employeeDOB'].includes(o.filedKey) ? convertToRequiredDateFormat(rowData[o.filedKey]) : rowData[o.filedKey]
                     }))
                     console.log(tempFields);
                     setIsId(rowData._id);

@@ -1,0 +1,29 @@
+.paytable-container {
+    .payslip-table {
+        border-radius: 10px; /* Adjust the radius as needed */
+        overflow: hidden;   /* Ensures rounded corners apply to table contents */
+        border: 1px solid #ddd; /* Optional: Adds an outer border to the table */
+    }
+    .p-datatable .p-datatable-thead > tr > th,
+    .p-datatable .p-datatable-tbody > tr > td {
+        border: 1px solid #000;
+        text-align: center;
+        
+    }
+    .p-datatable .p-datatable-tbody > tr {
+        border-bottom: 1px solid #000;
+    }
+    .p-datatable .p-datatable-tbody > tr:hover {
+        background-color: gainsboro; /* Light grey background */
+        cursor: pointer;/* Pointer cursor on hover */
+        transition: background-color 0.3s ease; /* Smooth transition */
+    }
+    
+    .p-datatable-thead > tr > th {
+        text-align: center !important;
+    }
+    
+    .p-column-header-content {
+        justify-content: center;
+    }
+}

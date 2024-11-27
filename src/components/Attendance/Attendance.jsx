@@ -27,7 +27,7 @@ const Attendance = () => {
         { name: "HalfDay", code: 3 }
     ]
     const handleStatusChange = (rowData, value) => {
-        const updateData = data.map((item) => item === rowData ? { ...item, employeeStatus: value.code, attendanceDate: convertToRequiredDateFormat(date) } : item);
+        const updateData = data.map((item) => item === rowData ? { ...item, attendanceStatus: value.code, attendanceDate: convertToRequiredDateFormat(date) } : item);
         setData(updateData);
     }
     const getStatusColor = (status) => {
@@ -42,41 +42,16 @@ const Attendance = () => {
 
                 <div>
                     <Dropdown
-                        value={statuses.find((o) => o.code === rowData.employeeStatus)}
+                        value={statuses.find((o) => o.code === rowData.attendanceStatus)}
                         onChange={e => handleStatusChange(rowData, e.value)}
                         options={statuses}
                         optionLabel='name'
                         placeholder='Select Status'
-                        className={`w-full md:w-14rem border border-black shadow-lg font-bold ${getStatusColor(rowData.employeeStatus)}`}
+                        className={`w-full md:w-14rem border border-black shadow-lg font-bold ${getStatusColor(rowData.attendanceStatus)}`}
                     />
                 </div>
             </>
         )
-    }
-    const getEmployeesData = async () => {
-        try {
-            const response = await axios.get("http://localhost:3000/employees", {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('authToken')}`
-                }
-            });
-            const updateResponse = response?.data?.data.map((o) => ({
-                employeeId: o.employeeId,
-                employeeName: o.employeeName,
-                employeeStatus: o.employeeStatus
-            }))
-            console.log("updateResponse :: ", updateResponse, response.data?.data);
-            setData(updateResponse || []);
-        } catch (error) {
-            const backendError = error.response.data.message;
-            toast.current && toast.current.show({
-                severity: 'error',
-                detail: backendError,
-                life: 3000,
-                position: 'top-right',
-                className: 'custom-toast' // Applies the custom CSS
-            });
-        }
     }
     const handleAttendanceSubmit = async () => {
         setSubmit(true); // Show the confirmation dialog
@@ -84,11 +59,11 @@ const Attendance = () => {
 
     const confirmAttendanceSubmit = async () => {
         try {
-            
+
             const parsedDate = convertToRequiredDateFormat(date);
             console.log("date :: ", parsedDate);
-            const updateData = data.map((o) => 
-                !(o.employeeStatus) ? { ...o, employeeStatus: 2, attendanceDate: parsedDate } : {...o, attendanceDate: parsedDate}
+            const updateData = data.map((o) =>
+                !(o.attendanceStatus) ? { ...o, attendanceStatus: 2, attendanceDate: parsedDate } : { ...o, attendanceDate: parsedDate }
             )
             console.log("updateData : ", updateData);
             setLoading(true);
@@ -102,8 +77,8 @@ const Attendance = () => {
                     }
                 });
             // setDate("");
-            
-            
+
+
             toast.current && toast.current.show({
                 severity: 'success',
                 detail: "Attendance successfully submitted!",
@@ -127,30 +102,33 @@ const Attendance = () => {
         console.log(date);
         if (date) {
             try {
+                setLoading(true);
                 const response = await axios.post("http://localhost:3000/employees/attendanceGetByDate",
-                    {date: convertToRequiredDateFormat(date)},
-                     {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${localStorage.getItem("authToken")}`
-                    }
-                });
-                console.log("attendance resp:: ",response?.data?.data);
-                
-                if ((response?.data?.data || []).length === 0) {
-                    setLoading(true);
-                    getEmployeesData();
-                } else {
-                    const formattedData = (response?.data?.data || []).map((o) => ({
-                        employeeName: o.employeeName,
-                        employeeId: o.employeeId,
-                        employeeStatus: parseInt(o.employeeStatus)
-                    }))
-                    
-                    setData(formattedData);
-                }
-            } catch (error) {
+                    { date: convertToRequiredDateFormat(date) },
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${localStorage.getItem("authToken")}`
+                        }
+                    });
+                console.log("attendance resp:: ", response?.data?.data);
+
+                // if ((response?.data?.data || []).length === 0) {
+                //     // setLoading(true);
+                //     getEmployeesData();
+                //     setLoading(false);
+                // } else {
+                // }
+                const formattedData = (response?.data?.data || []).map((o) => ({
+                    employeeName: o.employeeName,
+                    employeeId: o.employeeId,
+                    attendanceStatus: parseInt(o.attendanceStatus)
+                }))
+
+                setData(formattedData);
                 setLoading(false);
+            } catch (error) {
+                // setLoading(false);
                 const backendError = error.response?.data?.message || "An error occurred";
                 toast.current && toast.current.show({
                     severity: 'error',
@@ -162,11 +140,11 @@ const Attendance = () => {
             }
         }
     };
-    
+
     useEffect(() => {
         fetchAttendanceData(); // Call the async function within the effect
     }, [date]);
-    
+
     return (
         <>
             {loading && (
@@ -182,12 +160,12 @@ const Attendance = () => {
                 <div className="w-full flex items-center space-x-2">
                     {/* Back Button */}
                     <button
-                    className="flex items-center bg-sky-500 font-bold py-3 px-10 rounded-lg focus:outline-none hover:bg-white border border-gray-300 transition"
-                    onClick={() => navigate('/home')}
-                >
-                    <FontAwesomeIcon icon={faArrowLeft} className="text-black mr-2 text-2xl" /> {/* Left arrow icon */}
-                    Back
-                </button>
+                        className="flex items-center bg-sky-500 font-bold py-3 px-10 rounded-lg focus:outline-none hover:bg-white border border-gray-300 transition"
+                        onClick={() => navigate('/home')}
+                    >
+                        <FontAwesomeIcon icon={faArrowLeft} className="text-black mr-2 text-2xl" /> {/* Left arrow icon */}
+                        Back
+                    </button>
 
                     {/* Calendar */}
                     <Calendar
@@ -205,7 +183,7 @@ const Attendance = () => {
                     <DataTable value={data} className="p-datatable w-full">
                         <Column field="employeeId" header="EmployeeId" />
                         <Column field="employeeName" header="Employee Name" />
-                        <Column field="employeeStatus" body={actionTemplate} header="Employee Status" />
+                        <Column field="attendanceStatus" body={actionTemplate} header="Employee Status" />
                     </DataTable>
                 </div>
 

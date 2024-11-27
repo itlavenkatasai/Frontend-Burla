@@ -4,21 +4,22 @@ import axios from "axios";
 import { Toast } from "primereact/toast";
 
 export const EmployeeForm = ({
-    
-        setShowEmployeeForm,
-        getDataFromBackend,
-        employeeFields,
-        setEmployeeFields,
-        defaultEmployeeFields,
-        isId,
-        setIsId
+
+    setShowEmployeeForm,
+    getDataFromBackend,
+    employeeFields,
+    setEmployeeFields,
+    defaultEmployeeFields,
+    isId,
+    setIsId
 }) => {
-    
+
     const toast = useRef(null);
     const [loading, setLoading] = useState(false);
-    
-    
+
+
     const handleSubmit = async () => {
+        console.log("updating...")
         setLoading(true);
         let tempFields = [...employeeFields];
         let errors = false;
@@ -31,12 +32,13 @@ export const EmployeeForm = ({
                 fieldError: errorVal
             };
         });
+        // console.log(errors, tempFields)
 
         if (errors) {
             setLoading(false);
             return setEmployeeFields(tempFields);
         }
-        if(!isId){
+        if (!isId) {
             try {
                 const formData = employeeFields.reduce((acc, field) => {
                     acc[field.filedKey] = field.fieldValue;
@@ -64,9 +66,9 @@ export const EmployeeForm = ({
                     position: 'top-right',
                     className: 'custom-toast' // Applies the custom CSS
                 });
-    
+
             }
-        }else {
+        } else {
             try {
                 const formData = employeeFields.reduce((acc, field) => {
                     acc[field.filedKey] = field.fieldValue;
@@ -95,7 +97,7 @@ export const EmployeeForm = ({
                     position: 'top-right',
                     className: 'custom-toast' // Applies the custom CSS
                 });
-    
+
             }
         }
     };
@@ -112,31 +114,30 @@ export const EmployeeForm = ({
                 <form onSubmit={(e) => e.preventDefault()}>
                     {employeeFields.map((o, index) => (
                         <div key={o.fieldLabel} className="mb-6">
-                            {/* Label and Input in a single line */}
+                            {/* Label */}
                             <div className="flex items-center">
-                                <label className="w-40 font-semibold text-gray-700 mr-4">
+                                <label className="w-40 font-semibold text-gray-700 mr-4 text-left">
                                     {o.fieldLabel}:
                                 </label>
+                                {/* Input Field */}
                                 <input
                                     type={o.fieldInputType}
                                     value={o.fieldValue}
                                     onChange={(e) => {
+                                        // console.log("****** ", e.target.value);
                                         const tempFields = [...employeeFields];
                                         tempFields[index].fieldValue = e.target.value;
                                         setEmployeeFields(tempFields);
                                     }}
                                     placeholder={o.fieldPlaceHolder}
-                                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
-                            {/* Error message directly below the input field */}
-                            {o.fieldError && (
-                                <p className="text-red-500 text-sm mt-1 ml-32">
-                                    {o.fieldError}
-                                </p>
-                            )}
+                            {/* Error Message */}
+                            {o.fieldError && <p className="text-red-500 mt-1 ml-44">{o.fieldError}</p>}
                         </div>
                     ))}
+
                     <div className="flex justify-center space-x-2">
                         <button
                             type="submit"
@@ -155,6 +156,7 @@ export const EmployeeForm = ({
                     </div>
                 </form>
             </div>
+
         </>
     );
 };
