@@ -5,6 +5,7 @@ import BgBurla from "../images/BgBurla.jpg";
 import { checkAndValidateRegisterForm } from "../utils/Validate";
 import axios from "axios";
 import { Toast } from 'primereact/toast';
+import { PUBLIC_MONGO_URL } from "../constants";
 const Register = () => {
     const defaultFields = [
         {
@@ -61,8 +62,7 @@ const Register = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const toast = useRef();
-    const env = 'PROD';
-    const publicMongoUrl = env === 'PROD' ? 'https://backend-burla.onrender.com' : 'http://localhost:3000';
+    
     const handleSubmit = async () => {
         setLoading(true);
         let tempRegisterFields = [...registerFields];
@@ -86,7 +86,7 @@ const Register = () => {
                 acc[field.fieldKey] = field.fieldValue;
                 return acc;
             }, {});
-            const response = await axios.post(`${publicMongoUrl}/register`, formData);
+            const response = await axios.post(`${PUBLIC_MONGO_URL}/register`, formData);
             console.log(response);
             setRegisterFields(defaultFields);
             // navigate('/login');
@@ -108,59 +108,70 @@ const Register = () => {
     }
     return (
         <>
-            {loading && (
-                <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-                    <div className="loader border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div>
+        {loading && (
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+                <div className="loader border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div>
+            </div>
+        )}
+        <div className="min-h-screen flex items-center justify-center bg-cover bg-center p-10"
+            style={{ backgroundImage: `url(${BgBurla})` }}>
+            <Toast ref={toast} className="custom-toast" />
+            <div className="flex flex-col sm:flex-row w-full max-w-5xl rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-rose-300 to-gray-400">
+                {/* Image Section */}
+                <div className="sm:w-5/12 w-full flex-shrink-0 flex items-center justify-center">
+                    <img src={LogoBurla} alt="description" className="w-full h-full object-cover" />
                 </div>
-            )}
-            <div className="flex h-screen bg-cover bg-center p-14 overflow-hidden"
-                style={{ backgroundImage: `url(${BgBurla})` }}>
-                <Toast ref={toast} className="custom-toast" />
-                <div className="flex w-full rounded-xl shadow-pink-600 overflow-hidden">
-                    <div className="w-5/12  h-full flex items-center justify-center shadow-xl">
-                        <img src={LogoBurla} alt="description" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="w-7/12 bg-white h-full pt-6 px-10">
+    
+                {/* Form Section */}
+                <div className="sm:w-7/12 w-full bg-white flex flex-col justify-between pt-6 pb-6 px-6 sm:pt-10 sm:pb-10 sm:px-10">
+                    <div>
                         <p className="text-4xl font-extrabold">Register</p>
                         <form onSubmit={(e) => e.preventDefault()}>
-                            <div className="flex mt-5 flex-wrap gap-3 justify-between">
+                            <div className="flex flex-wrap gap-4 justify-between mt-5">
                                 {registerFields.map((o, index) => (
-                                    <div key={index} className="flex flex-col space-y-1 mt-2 w-[48%]"> {/* 48% width to align two per row */}
-                                        <label className="text-xl font-medium">{o.fieldLabel}</label>
-                                        {
-                                            o.fieldType === 'input' ?
-
-                                                <div>
-                                                    <input
-                                                        type={o.fieldInputType}
-                                                        className="border py-3 px-6 bg-gray-100 shadow-2xl w-full rounded-md"
-                                                        value={o.fieldValue}
-                                                        onChange={(e) => {
-                                                            // console.log(e.target.value);
-                                                            let tempFields = [...registerFields];
-                                                            tempFields[index].fieldValue = e.target.value;
-                                                            setRegisterFields(tempFields);
-                                                        }}
-                                                    />
-                                                    {o.fieldError ? <p className="text-red-600 font-bold font-medium">{o.fieldError}</p> : <></>}
-                                                </div>
-                                                : <></>
-                                        }
-
+                                    <div key={index} className="flex flex-col space-y-2 w-full sm:w-[48%]">
+                                        <label className="text-lg font-medium">{o.fieldLabel}</label>
+                                        {o.fieldType === 'input' && (
+                                            <div>
+                                                <input
+                                                    type={o.fieldInputType}
+                                                    className="border border-gray-300 rounded-md py-3 px-4 bg-gray-100 shadow-lg w-full"
+                                                    value={o.fieldValue}
+                                                    onChange={(e) => {
+                                                        const tempFields = [...registerFields];
+                                                        tempFields[index].fieldValue = e.target.value;
+                                                        setRegisterFields(tempFields);
+                                                    }}
+                                                />
+                                                {o.fieldError && (
+                                                    <p className="text-red-500 text-sm">{o.fieldError}</p>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>
-                            <div className="flex">
-                                <button className="bg-blue-600 rounded-lg mt-5 px-6 py-3 text-white font-bold shadow-lg" onClick={handleSubmit}>Register</button>
+                            <div className="mt-5">
+                                <button
+                                    className="bg-blue-600 rounded-lg px-6 py-3 text-white font-bold shadow-md"
+                                    onClick={handleSubmit}
+                                >
+                                    Register
+                                </button>
                             </div>
                         </form>
-                        <p className="mt-5">Already have an account?
-                            <Link to='/login' className="text-blue-600 underline font-semibold"> Log in</Link>
-                        </p>
                     </div>
+                    <p className="mt-5">
+                        Already have an account?{' '}
+                        <Link to="/login" className="text-blue-600 underline font-semibold">
+                            Log in
+                        </Link>
+                    </p>
                 </div>
             </div>
-        </>
+        </div>
+    </>
+    
     )
 }
 export default Register;

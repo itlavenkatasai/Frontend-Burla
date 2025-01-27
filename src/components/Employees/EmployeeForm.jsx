@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { checkAndValidateEmployeeForm } from "../../utils/Validate.js";
 import axios from "axios";
 import { Toast } from "primereact/toast";
+import { PUBLIC_MONGO_URL } from "../../constants.js";
 
 export const EmployeeForm = ({
 
@@ -16,8 +17,7 @@ export const EmployeeForm = ({
 
     const toast = useRef(null);
     const [loading, setLoading] = useState(false);
-    const env = 'PROD';
-    const publicMongoUrl = env === 'PROD' ? 'https://backend-burla.onrender.com' : 'http://localhost:3000';
+    
 
 
     const handleSubmit = async () => {
@@ -46,7 +46,7 @@ export const EmployeeForm = ({
                     acc[field.filedKey] = field.fieldValue;
                     return acc;
                 }, {})
-                const response = await axios.post(`${publicMongoUrl}/employee`, formData, {
+                const response = await axios.post(`${PUBLIC_MONGO_URL}/employee`, formData, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`
@@ -76,7 +76,7 @@ export const EmployeeForm = ({
                     acc[field.filedKey] = field.fieldValue;
                     return acc;
                 }, {})
-                const response = await axios.patch(`${publicMongoUrl}/employee/${isId}`, formData, {
+                const response = await axios.patch(`${PUBLIC_MONGO_URL}/employee/${isId}`, formData, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`

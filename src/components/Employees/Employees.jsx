@@ -14,6 +14,7 @@ import { Toast } from "primereact/toast";
 import axios from "axios";
 import './employee.css'
 import { convertToRequiredDateFormat } from "../../utils/utils";
+import { PUBLIC_MONGO_URL } from "../../constants";
 
 const Employees = () => {
     const navigate = useNavigate();
@@ -92,11 +93,10 @@ const Employees = () => {
     const [isId, setIsId] = useState(null);
     const [searchText, setSearchText] = useState(null);
     const [showClearButton, setShowClearButton] = useState(false);
-    const env = 'PROD';
-    const publicMongoUrl = env === 'PROD' ? 'https://backend-burla.onrender.com' : 'http://localhost:3000';
+    
     const getDataFromBackend = async () => {
         try {
-            const response = await axios.get(`${publicMongoUrl}/employees`, {
+            const response = await axios.get(`${PUBLIC_MONGO_URL}/employees`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`
                 }
@@ -117,7 +117,7 @@ const Employees = () => {
     const handleDelete = async () => {
         try {
 
-            await axios.delete(`${publicMongoUrl}/employee/${selectedEmployeeId}`, {
+            await axios.delete(`${PUBLIC_MONGO_URL}/employee/${selectedEmployeeId}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`
                 }
@@ -142,7 +142,7 @@ const Employees = () => {
     }, []);
     const handleSearch = async () => {
         try {
-            const response = await axios.get(`${publicMongoUrl}/employee/search/${searchText}`, {
+            const response = await axios.get(`${PUBLIC_MONGO_URL}/employee/search/${searchText}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`
                 }

@@ -12,6 +12,7 @@ import { convertToRequiredDateFormat } from '../../utils/utils'
 
 import { Dialog } from 'primereact/dialog';
 import { useNavigate } from 'react-router'
+import { PUBLIC_MONGO_URL } from '../../constants';
 
 const Attendance = () => {
     const [loading, setLoading] = useState(false);
@@ -19,8 +20,7 @@ const Attendance = () => {
     const [data, setData] = useState([])
     const [date, setDate] = useState(new Date());
     const [submit, setSubmit] = useState(false);
-    const env = 'PROD';
-    const publicMongoUrl = env === 'PROD' ? 'https://backend-burla.onrender.com' : 'http://localhost:3000';
+    
     // const [dateError, setDateError] = useState("");
     const navigate = useNavigate();
     const statuses = [
@@ -70,7 +70,7 @@ const Attendance = () => {
             console.log("updateData : ", updateData);
             setLoading(true);
             console.log("loading started");
-            await axios.post(`${publicMongoUrl}/employees/attendance`,
+            await axios.post(`${PUBLIC_MONGO_URL}/employees/attendance`,
                 { attendanceData: updateData },
                 {
                     headers: {
@@ -105,7 +105,7 @@ const Attendance = () => {
         if (date) {
             try {
                 setLoading(true);
-                const response = await axios.post(`${publicMongoUrl}/employees/attendanceGetByDate`,
+                const response = await axios.post(`${PUBLIC_MONGO_URL}/employees/attendanceGetByDate`,
                     { date: convertToRequiredDateFormat(date) },
                     {
                         headers: {

@@ -7,6 +7,7 @@ import BgBurla from '../images/BgBurla.jpg';
 import { checkAndValidateLoginForm } from '../utils/Validate';
 import axios from 'axios';
 import { Toast } from 'primereact/toast';
+import { PUBLIC_MONGO_URL } from '../constants';
 
 const Login = () => {
     const defaultLoginFields = [
@@ -31,10 +32,8 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const toast = useRef(null);
-    const env = 'PROD';
-    const publicMongoUrl = env === 'PROD' ? 'https://backend-burla.onrender.com' : 'http://localhost:3000';
     const handleSubmit = async () => {
-        setLoading(true);
+        // setLoading(true);
         let tempLoginFields = [...loginFields];
         let errors = false;
         tempLoginFields = tempLoginFields.map((o, index) => {
@@ -54,7 +53,7 @@ const Login = () => {
                 acc[field.fieldKey] = field.fieldValue;
                 return acc;
             }, {});
-            const response = await axios.post(`${publicMongoUrl}/login`, formData);
+            const response = await axios.post(`${PUBLIC_MONGO_URL}/login`, formData);
             console.log(response.data);
             const token = response.data.token;
             localStorage.setItem("authToken", token);
@@ -81,56 +80,61 @@ const Login = () => {
 
     return (
         <>
-            {loading && (
-                <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-                    <div className="loader border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div>
+        {loading && (
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+                <div className="loader border-t-4 border-blue-500 rounded-full w-12 h-12 animate-spin"></div>
+            </div>
+        )}
+        <div className="min-h-screen flex items-center justify-center bg-cover bg-center p-10"
+             style={{ backgroundImage: `url(${BgBurla})` }}>
+            <Toast ref={toast} className="custom-toast" />
+            <div className="flex flex-col sm:flex-row w-full max-w-5xl rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-rose-300 to-gray-400">
+                <div className="sm:w-7/12 w-full h-48 sm:h-full flex items-center justify-center shadow-xl">
+                    <img src={LogoBurla} alt="description" className="w-full h-full object-cover" />
                 </div>
-            )}
-            <div className="flex h-screen bg-cover bg-center p-20 overflow-hidden"
-                style={{ backgroundImage: `url(${BgBurla})` }} >
-                <Toast ref={toast} className="custom-toast" />
-                <div className="flex w-full rounded-xl  overflow-hidden shadow-2xl bg-gradient-to-br from-rose-300 to-gray-400">
-                    <div className="w-7/12  h-full flex items-center justify-center shadow-xl">
-                        <img src={LogoBurla} alt="description" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="w-5/12 bg-white h-full pt-24 pl-20">
-                        <p className="text-4xl font-extrabold">Login</p>
-                        <form onSubmit={(e) => e.preventDefault()}>
-                            {
-                                loginFields.map((o, index) => (
-                                    <div key={index} className="flex flex-col space-y-2 mt-5"> {/* Added flex-col and spacing */}
-                                        <label className="text-lg font-medium">{o.fieldLabel}</label>
-                                        {
-                                            o.fieldType === 'input' ? (
-                                                <div>
-                                                    <input
-                                                        type={o.fieldInputType}
-                                                        value={o.fieldValue}
-                                                        onChange={(e) => {
-                                                            const tempFields = [...loginFields];
-                                                            tempFields[index].fieldValue = e.target.value;
-                                                            setLoginFields(tempFields);
-                                                        }}
-                                                        className="border border-gray-300 rounded-md py-3 px-2 bg-gray-100 shadow-lg w-2/3" // Tailwind classes for styling
-                                                    />
-                                                    {o.fieldError ? <p className='text-red-500'>{o.fieldError}</p> : <></>}
-                                                </div>
-                                            ) : null
-                                        }
+                <div className="sm:w-5/12 w-full bg-white h-auto pt-10 px-6 sm:pt-24 sm:pl-20 overflow-y-auto">
+                    <p className="text-4xl font-extrabold">Login</p>
+                    <form onSubmit={(e) => e.preventDefault()}>
+                        {loginFields.map((o, index) => (
+                            <div key={index} className="flex flex-col space-y-2 mt-5">
+                                <label className="text-lg font-medium">{o.fieldLabel}</label>
+                                {o.fieldType === 'input' ? (
+                                    <div>
+                                        <input
+                                            type={o.fieldInputType}
+                                            value={o.fieldValue}
+                                            onChange={(e) => {
+                                                const tempFields = [...loginFields];
+                                                tempFields[index].fieldValue = e.target.value;
+                                                setLoginFields(tempFields);
+                                            }}
+                                            className="border border-gray-300 rounded-md py-3 px-2 bg-gray-100 shadow-lg w-full max-w-md"
+                                        />
+                                        {o.fieldError ? <p className="text-red-500">{o.fieldError}</p> : null}
                                     </div>
-                                ))
-                            }
-                            <div>
-                                <button className='bg-blue-600 rounded-lg mt-5 px-6 py-3 text-white font-bold' onClick={handleSubmit}>Login</button>
+                                ) : null}
                             </div>
-                        </form>
-                        <p className='mt-5'>Don't have an account yet? Please
-                            <Link to='/register' className='text-blue-600 underline font-semibold'>  Register</Link>
-                        </p>
-                    </div>
+                        ))}
+                        <div>
+                            <button
+                                className="bg-blue-600 rounded-lg mt-5 px-6 py-3 text-white font-bold"
+                                onClick={handleSubmit}
+                            >
+                                Login
+                            </button>
+                        </div>
+                    </form>
+                    <p className="mt-5">
+                        Don't have an account yet? Please{' '}
+                        <Link to="/register" className="text-blue-600 underline font-semibold">
+                            Register
+                        </Link>
+                    </p>
                 </div>
             </div>
-        </>
+        </div>
+    </>
+    
     )
 }
 export default Login;
