@@ -6,8 +6,10 @@ import { Dropdown } from 'primereact/dropdown';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import './payslip.css'
+import { useNavigate } from "react-router";
 
 const PaySlip = (props) => {
+    const navigate = useNavigate();
     const [selectedMonth, setSelectedMonth] = useState("");
     const [selectedYear, setSelectedYear] = useState("");
     const months = [
@@ -60,9 +62,11 @@ const PaySlip = (props) => {
                 {/* Back Button with Left Arrow Icon */}
                 <Button
                     className="flex items-center bg-red-400 font-bold py-1 px-4 rounded-lg focus:outline-none hover:bg-white border border-black transition"
-                    onClick={() => { }}
+                    onClick={() => navigate('/home')}
                 >
-                    <FontAwesomeIcon icon={faArrowLeft} className="text-black mr-2 text-2xl" /> {/* Left arrow icon */}
+                    <FontAwesomeIcon icon={faArrowLeft} className="text-black mr-2 text-2xl" 
+                    
+                    /> {/* Left arrow icon */}
                     Back
                 </Button>
                 <div className="space-x-2">
@@ -98,6 +102,7 @@ const PaySlip = (props) => {
                     <Column field="absent" header = "ABSENT"/>
                     <Column field="dayWiseAmount" header = "DAYWISE-AMOUNT"/>
                     <Column field="monthWiseAmount" header = "MONTHWISE-AMOUNT"/>
+                    <Column field="givenAmount" header = "GIVEN-AMOUNT"/>
                     <Column field="leftAmount" header = "LEFT-AMOUNT"/>
                     <Column field="presentedDays" header = "PRESENTED-DAYS"/>
                     <Column field="absentDays" header = "ABSENT-DAYS"/>

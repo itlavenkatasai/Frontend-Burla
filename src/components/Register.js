@@ -74,7 +74,6 @@ const Register = () => {
                 fieldError: errorVal
             }
         });
-        console.log()
         if (errors) {
             setLoading(false);
             return setRegisterFields(tempRegisterFields);
