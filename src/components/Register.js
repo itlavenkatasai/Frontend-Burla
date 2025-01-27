@@ -61,6 +61,8 @@ const Register = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const toast = useRef();
+    const env = 'PROD';
+    const publicMongoUrl = env === 'PROD' ? 'https://backend-burla.onrender.com' : 'http://localhost:3000';
     const handleSubmit = async () => {
         setLoading(true);
         let tempRegisterFields = [...registerFields];
@@ -84,7 +86,7 @@ const Register = () => {
                 acc[field.fieldKey] = field.fieldValue;
                 return acc;
             }, {});
-            const response = await axios.post('http://localhost:3000/register', formData);
+            const response = await axios.post(`${publicMongoUrl}/register`, formData);
             console.log(response);
             setRegisterFields(defaultFields);
             // navigate('/login');

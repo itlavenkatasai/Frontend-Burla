@@ -19,6 +19,8 @@ const Attendance = () => {
     const [data, setData] = useState([])
     const [date, setDate] = useState(new Date());
     const [submit, setSubmit] = useState(false);
+    const env = 'PROD';
+    const publicMongoUrl = env === 'PROD' ? 'https://backend-burla.onrender.com' : 'http://localhost:3000';
     // const [dateError, setDateError] = useState("");
     const navigate = useNavigate();
     const statuses = [
@@ -68,7 +70,7 @@ const Attendance = () => {
             console.log("updateData : ", updateData);
             setLoading(true);
             console.log("loading started");
-            await axios.post("http://localhost:3000/employees/attendance",
+            await axios.post(`${publicMongoUrl}/employees/attendance`,
                 { attendanceData: updateData },
                 {
                     headers: {
@@ -99,11 +101,11 @@ const Attendance = () => {
         }
     }
     const fetchAttendanceData = async () => {
-        console.log(date);
+        // console.log(date);
         if (date) {
             try {
                 setLoading(true);
-                const response = await axios.post("http://localhost:3000/employees/attendanceGetByDate",
+                const response = await axios.post(`${publicMongoUrl}/employees/attendanceGetByDate`,
                     { date: convertToRequiredDateFormat(date) },
                     {
                         headers: {
@@ -226,4 +228,4 @@ const Attendance = () => {
     )
 }
 
-export default Attendance
+export default Attendance;

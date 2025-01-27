@@ -31,6 +31,8 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const toast = useRef(null);
+    const env = 'PROD';
+    const publicMongoUrl = env === 'PROD' ? 'https://backend-burla.onrender.com' : 'http://localhost:3000';
     const handleSubmit = async () => {
         setLoading(true);
         let tempLoginFields = [...loginFields];
@@ -52,7 +54,7 @@ const Login = () => {
                 acc[field.fieldKey] = field.fieldValue;
                 return acc;
             }, {});
-            const response = await axios.post('http://localhost:3000/login', formData);
+            const response = await axios.post(`${publicMongoUrl}/login`, formData);
             console.log(response.data);
             const token = response.data.token;
             localStorage.setItem("authToken", token);

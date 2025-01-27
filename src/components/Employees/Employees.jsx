@@ -92,9 +92,11 @@ const Employees = () => {
     const [isId, setIsId] = useState(null);
     const [searchText, setSearchText] = useState(null);
     const [showClearButton, setShowClearButton] = useState(false);
+    const env = 'PROD';
+    const publicMongoUrl = env === 'PROD' ? 'https://backend-burla.onrender.com' : 'http://localhost:3000';
     const getDataFromBackend = async () => {
         try {
-            const response = await axios.get("http://localhost:3000/employees", {
+            const response = await axios.get(`${publicMongoUrl}/employees`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`
                 }
@@ -115,7 +117,7 @@ const Employees = () => {
     const handleDelete = async () => {
         try {
 
-            await axios.delete(`http://localhost:3000/employee/${selectedEmployeeId}`, {
+            await axios.delete(`${publicMongoUrl}/employee/${selectedEmployeeId}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`
                 }
@@ -134,14 +136,13 @@ const Employees = () => {
 
         }
     }
-    // console.log(getDataFromBackend());
     useEffect(() => {
         getDataFromBackend();
         // eslint-disable-next-line
     }, []);
     const handleSearch = async () => {
         try {
-            const response = await axios.get(`http://localhost:3000/employee/search/${searchText}`, {
+            const response = await axios.get(`${publicMongoUrl}/employee/search/${searchText}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`
                 }
